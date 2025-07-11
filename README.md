@@ -1,9 +1,6 @@
 # Airbnb Price Prediction - Berlin (SoSe 2025 ML Project)
 
-## Authors
-Batyrkhan Abukhanov & Sirazh Gabdullin
-
----
+## Authors: Batyrkhan Abukhanov & Sirazh Gabdullin
 
 This project is part of the final assignment for the **Machine Learning course (SoSe 2025)**. The goal is to predict Airbnb nightly listing prices in **Berlin** using multiple data modalities such as structured listing features and potentially text or spatial data.
 
