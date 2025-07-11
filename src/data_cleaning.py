@@ -3,6 +3,8 @@ from loguru import logger
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def get_listings_data():
@@ -79,4 +81,57 @@ def get_listings_data():
 
     return X, y
 
-get_listings_data()
+
+def clean_text(text):
+    if pd.isna(text):
+        return ""
+
+    text = text.lower()
+    text = re.sub(r'[^\w\s]', '', text)  # remove punctuation
+    text = re.sub(r'\d+', '', text)      # remove numbers
+    return text
+
+
+def get_description():
+    df = pd.read_csv("../dataset/listings.csv.gz")
+
+    df['price'] = df['price'].replace('[\$,€]', '', regex=True).replace(',', '', regex=True).astype(float)
+    df = df[df['price'] < 400]
+
+    selected_cols = [
+        'price',
+        'room_type',
+        'property_type',
+        'accommodates',
+        'bedrooms',
+        'bathrooms',
+        'beds',
+        'latitude',
+        'longitude',
+        'neighbourhood_cleansed',
+        'minimum_nights',
+        'maximum_nights',
+        'availability_30',
+        'availability_365',
+        'number_of_reviews',
+        'reviews_per_month',
+        'review_scores_rating',
+        'review_scores_cleanliness',
+        'review_scores_value',
+        'host_is_superhost',
+        'host_total_listings_count',
+        'description'
+    ]
+    df = df[selected_cols]
+
+    df['description'] = df['description']
+    df['description_clean'] = df['description'].apply(clean_text)
+
+    tfidf = TfidfVectorizer(max_features=100)  # limit to top 100 words to avoid overfitting
+    text_features = tfidf.fit_transform(df['description_clean'])
+
+    # Convert to DataFrame and reset index to align
+    text_df = pd.DataFrame(text_features.toarray(), columns=tfidf.get_feature_names_out())
+    text_df.reset_index(drop=True, inplace=True)
+
+    return text_df

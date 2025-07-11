@@ -1,10 +1,11 @@
 from sklearn.model_selection import train_test_split
-from data_cleaning import get_listings_data
+from data_cleaning import get_listings_data, get_description
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 from loguru import logger
 from sklearn.ensemble import RandomForestRegressor
+import pandas as pd
 
 
 def get_split_data():
@@ -38,10 +39,8 @@ def random_forest():
     model_rf = RandomForestRegressor(random_state=42, n_jobs=-1)
     model_rf.fit(X_train, y_train)
 
-    # Predict
     y_pred_rf = model_rf.predict(X_test)
 
-    # Evaluate
     mae_rf = mean_absolute_error(y_test, y_pred_rf)
     rmse_rf = np.sqrt(mean_squared_error(y_test, y_pred_rf))
     r2_rf = r2_score(y_test, y_pred_rf)
@@ -52,5 +51,26 @@ def random_forest():
     logger.info(f"R² Score: {r2_rf:.3f}")
 
 
+def rf_text():
+    X, y = get_listings_data()
+    text_df = get_description()
+
+    X.reset_index(drop=True, inplace=True)
+    y.reset_index(drop=True)
+
+    X_combined = pd.concat([X, text_df], axis=1)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_combined, y, test_size=0.2, random_state=42)
+
+    model_rf = RandomForestRegressor(random_state=42, n_jobs=-1)
+    model_rf.fit(X_train, y_train)
+
+    y_pred = model_rf.predict(X_test)
+    logger.info(f"MAE: {mean_absolute_error(y_test, y_pred):.2f}")
+    logger.info(f"RMSE: {np.sqrt(mean_squared_error(y_test, y_pred)):.2f}")
+    logger.info(f"R² Score: {r2_score(y_test, y_pred):.3f}")
+
+
 linreg()
 random_forest()
+rf_text()
