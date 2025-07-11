@@ -2,6 +2,7 @@ import pandas as pd
 from loguru import logger
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import StandardScaler
 
 
 def get_listings_data():
@@ -56,8 +57,26 @@ def get_listings_data():
     # host_is_superhost => fill missing with 'f' (not superhost)
     df['host_is_superhost'] = df['host_is_superhost'].fillna('f')
 
+    # Feature Engineering
+    df['host_is_superhost'] = df['host_is_superhost'].map({'t': 1, 'f': 0})
+    df = pd.get_dummies(df, columns=['room_type', 'property_type', 'neighbourhood_cleansed'], drop_first=True)
+
+    X = df.drop('price', axis=1)
+    y = df['price']
+
+    # Scaling numerical features
+    numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
+
+    scaler = StandardScaler()
+    X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
+
+    # logger.info(X)
+    # logger.info(y)
+
     ## Exploring missing data
     # missing = df.isnull().sum()
     # logger.info(missing[missing > 0].sort_values(ascending=False))
 
-    return df
+    return X, y
+
+get_listings_data()
