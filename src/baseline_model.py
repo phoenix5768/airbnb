@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split
-from data_cleaning import get_description
+from listings import get_description
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
