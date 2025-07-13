@@ -6,32 +6,11 @@ from loguru import logger
 from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
 from textblob import TextBlob
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import GradientBoostingRegressor
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import uniform, randint
-
-
-def rf_text(X, y):
-    text_df = get_description()
-
-    X.reset_index(drop=True, inplace=True)
-    y.reset_index(drop=True)
-
-    X_combined = pd.concat([X, text_df], axis=1)
-
-    X_train, X_test, y_train, y_test = train_test_split(X_combined, y, test_size=0.2, random_state=42)
-
-    model_rf = RandomForestRegressor(random_state=42, n_jobs=-1)
-    model_rf.fit(X_train, y_train)
-
-    y_pred = model_rf.predict(X_test)
-    logger.info(f"MAE: {mean_absolute_error(y_test, y_pred):.2f}")
-    logger.info(f"RMSE: {np.sqrt(mean_squared_error(y_test, y_pred)):.2f}")
-    logger.info(f"R² Score: {r2_score(y_test, y_pred):.3f}")
 
 
 def run_rf(X, y):
