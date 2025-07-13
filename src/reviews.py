@@ -6,11 +6,6 @@ from sklearn.compose import ColumnTransformer
 import baseline_model
 
 
-def get_sentiment(text):
-    if pd.isnull(text):
-        return 0
-    return TextBlob(text).sentiment.polarity  # Returns value in [-1.0, 1.0]
-
 
 def get_cleaned_listings(data):
     data['price'] = data['price'].replace('[\$,€]', '', regex=True).replace(',', '', regex=True).astype(float)
@@ -117,4 +112,5 @@ def get_prepared_data():
 # baseline_model.hyperp_tune(X, y)
 X, y = get_prepared_data()
 baseline_model.run_gb(X, y)
-# baseline_model.run_linreg(X, y)
+baseline_model.run_linreg(X, y)
+baseline_model.run_rf(X, y)

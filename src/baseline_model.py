@@ -129,3 +129,9 @@ def hyperp_tune(X, y):
     random_search.fit(X_train, y_train)
     best_model = random_search.best_estimator_
     print(best_model)
+
+
+def get_sentiment(text):
+    if pd.isnull(text):
+        return 0
+    return TextBlob(text).sentiment.polarity  # Returns value in [-1.0, 1.0]
