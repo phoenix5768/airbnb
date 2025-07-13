@@ -1,6 +1,21 @@
+import copy
+
 import pandas as pd
 import baseline_model
+import re
+
 from sklearn.preprocessing import StandardScaler
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+def clean_text(text):
+    if pd.isna(text):
+        return ""
+
+    text = text.lower()
+    text = re.sub(r'[^\w\s]', '', text)  # remove punctuation
+    text = re.sub(r'\d+', '', text)      # remove numbers
+    return text
 
 
 def get_calendar_data():
@@ -36,6 +51,17 @@ def get_listings_data():
     df['price'] = df['price'].replace('[\$,€]', '', regex=True).replace(',', '', regex=True).astype(float)
     df = df[df['price'] < 400]
 
+    # Adding description
+    desc_df = copy.deepcopy(df)
+    desc_df['description_clean'] = desc_df['description'].apply(clean_text)
+    tfidf = TfidfVectorizer(max_features=100)  # limit to top 100 words to avoid overfitting
+    text_features = tfidf.fit_transform(desc_df['description_clean'])
+
+    # Convert to DataFrame and reset index to align
+    text_df = pd.DataFrame(text_features.toarray(), columns=tfidf.get_feature_names_out())
+    text_df.reset_index(drop=True, inplace=True)
+    text_df['id'] = desc_df['id'].values
+
     selected_cols = [
         'id',
         'price',
@@ -63,8 +89,10 @@ def get_listings_data():
 
     df = df[selected_cols]
 
+    df = df.merge(text_df, on='id', how='left')
+
     # Numeric scores => fill with median
-    for col in ['review_scores_rating', 'review_scores_value', 'review_scores_cleanliness', 'bedrooms', 'beds', 'bathrooms', 'host_total_listings_count']:
+    for col in ['review_scores_rating', 'review_scores_value', 'review_scores_cleanliness', 'bedrooms_x', 'beds', 'bathrooms', 'host_total_listings_count']:
         df[col] = df[col].fillna(df[col].median())
 
     # reviews_per_month => fill with 0 (no reviews means zero per month)
