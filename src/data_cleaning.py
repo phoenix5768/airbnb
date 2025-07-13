@@ -1,5 +1,6 @@
 import pandas as pd
 import baseline_model
+from sklearn.preprocessing import StandardScaler
 
 
 def get_calendar_data():
@@ -34,6 +35,33 @@ def get_listings_data():
     df = pd.read_csv("../dataset/listings.csv.gz")
     df['price'] = df['price'].replace('[\$,€]', '', regex=True).replace(',', '', regex=True).astype(float)
     df = df[df['price'] < 400]
+
+    selected_cols = [
+        'id',
+        'price',
+        'room_type',
+        'property_type',
+        'accommodates',
+        'bedrooms',
+        'bathrooms',
+        'beds',
+        'latitude',
+        'longitude',
+        'neighbourhood_cleansed',
+        'minimum_nights',
+        'maximum_nights',
+        'availability_30',
+        'availability_365',
+        'number_of_reviews',
+        'reviews_per_month',
+        'review_scores_rating',
+        'review_scores_cleanliness',
+        'review_scores_value',
+        'host_is_superhost',
+        'host_total_listings_count'
+    ]
+
+    df = df[selected_cols]
 
     # Numeric scores => fill with median
     for col in ['review_scores_rating', 'review_scores_value', 'review_scores_cleanliness', 'bedrooms', 'beds', 'bathrooms', 'host_total_listings_count']:
@@ -85,3 +113,17 @@ def get_reviews_data():
     review_features['days_since_last_review'] = review_features['days_since_last_review'].fillna(365)
 
     return review_features
+
+
+def get_final_data(df):
+    df = df.drop('id', axis=1)
+    X = df.drop('price', axis=1)
+    y = df['price']
+
+    # Scaling numerical features
+    numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
+
+    scaler = StandardScaler()
+    X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
+
+    return X, y
