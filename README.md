@@ -13,10 +13,10 @@ Build a machine learning model that predicts the nightly price of an Airbnb list
 ---
 
 ## Project Structure
-airbnb/
-├── dataset/ # Raw datasets
-├── src/ # Source code 
-├── requirements.txt
+airbnb/  </br>
+├── dataset/ # Raw datasets </br> 
+├── src/ # Source code </br>
+├── requirements.txt </br>
 └── README.md
 
 
@@ -96,6 +96,7 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
 
 The repo link:
 ```bash
