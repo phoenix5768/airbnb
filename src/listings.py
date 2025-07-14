@@ -10,3 +10,6 @@ def main():
     baseline_model.run_gb(X, y)
     baseline_model.run_linreg(X, y)
     baseline_model.run_rf(X, y)
+
+
+main()

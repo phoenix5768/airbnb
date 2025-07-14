@@ -2,6 +2,7 @@ import json
 import pandas as pd
 from shapely.geometry import Point, Polygon, MultiPolygon
 from math import radians, cos, sin, asin, sqrt
+from config import NEIGHBOURHOODS_FILE, NEIGHBOURHOODS_GEO_FILE
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     """Calculate the great circle distance in kilometers between two points on the earth."""
@@ -22,7 +23,7 @@ def add_neighborhood_clustering(df):
     """Add neighborhood clustering information to the dataframe."""
     try:
         # Load neighborhood mapping
-        neigh_map = pd.read_csv('dataset/neighbourhoods.csv')
+        neigh_map = pd.read_csv(NEIGHBOURHOODS_FILE)
         print(f"Loaded neighborhood mapping with {len(neigh_map)} neighborhoods")
         
         # Merge to get neighborhood_group for each listing
@@ -48,7 +49,7 @@ def add_neighborhood_clustering(df):
 def load_neighborhood_geometries():
     """Load neighborhood geometries from GeoJSON file."""
     try:
-        with open('dataset/neighbourhoods.geojson', 'r') as f:
+        with open(NEIGHBOURHOODS_GEO_FILE, 'r') as f:
             geojson_data = json.load(f)
         
         neighborhoods = {}

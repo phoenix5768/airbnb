@@ -19,6 +19,12 @@ from spatial import (
     add_neighborhood_clustering
 )
 
+from config import (
+    REVIEWS_FILE,
+    LISTINGS_FILE,
+    CALENDAR_FILE
+)
+
 # Coordinates for Puerta del Sol, Madrid (city center)
 CITY_CENTER_LAT = 40.4168
 CITY_CENTER_LON = -3.7038
@@ -34,7 +40,7 @@ def clean_text(text):
 
 
 def get_calendar_data():
-    calendar = pd.read_csv('dataset/calendar.csv.gz')
+    calendar = pd.read_csv(CALENDAR_FILE)
 
     # Clean the price column
     calendar['price'] = calendar['price'].replace('[\$,]', '', regex=True).astype(float)
@@ -62,7 +68,7 @@ def get_calendar_data():
 
 
 def get_listings_data():
-    df = pd.read_csv("dataset/listings.csv.gz")
+    df = pd.read_csv(LISTINGS_FILE)
     df['price'] = df['price'].replace('[\$,€]', '', regex=True).replace(',', '', regex=True).astype(float)
     df = df[df['price'] < 400]
 
@@ -142,7 +148,7 @@ def get_listings_data():
 
 
 def get_reviews_data():
-    reviews = pd.read_csv("dataset/reviews.csv.gz")
+    reviews = pd.read_csv(REVIEWS_FILE)
 
     reviews['date'] = pd.to_datetime(reviews['date'])
 
