@@ -3,14 +3,9 @@ import copy
 import pandas as pd
 import baseline_model
 import re
-import json
-import numpy as np
-from shapely.geometry import Point, Polygon, MultiPolygon
-from shapely.ops import unary_union
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_extraction.text import TfidfVectorizer
-from math import radians, cos, sin, asin, sqrt
 
 from spatial import (
     load_neighborhood_geometries, 
@@ -24,6 +19,7 @@ from config import (
     LISTINGS_FILE,
     CALENDAR_FILE
 )
+
 
 # Coordinates for Puerta del Sol, Madrid (city center)
 CITY_CENTER_LAT = 40.4168
@@ -70,7 +66,7 @@ def get_calendar_data():
 def get_listings_data():
     df = pd.read_csv(LISTINGS_FILE)
     df['price'] = df['price'].replace('[\$,€]', '', regex=True).replace(',', '', regex=True).astype(float)
-    df = df[df['price'] < 400]
+    df = df[df['price'] < 200]
 
     # Compute distance to city center
     df['distance_to_center_km'] = df.apply(

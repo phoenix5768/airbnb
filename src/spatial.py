@@ -4,6 +4,7 @@ from shapely.geometry import Point, Polygon, MultiPolygon
 from math import radians, cos, sin, asin, sqrt
 from config import NEIGHBOURHOODS_FILE, NEIGHBOURHOODS_GEO_FILE
 
+
 def haversine_distance(lat1, lon1, lat2, lon2):
     """Calculate the great circle distance in kilometers between two points on the earth."""
     # Ensure all inputs are floats before converting to radians

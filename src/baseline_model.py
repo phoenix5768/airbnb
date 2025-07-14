@@ -2,7 +2,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
-from loguru import logger
 from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
 from textblob import TextBlob
@@ -29,18 +28,19 @@ def run_rf(X, y):
     print(f"MAE: {mae_rf:.2f}")
     print(f"RMSE: {rmse_rf:.2f}")
     print(f"R² Score: {r2_rf:.3f}")
-    # Print feature importances
-    importances = model_rf.feature_importances_
-    feature_names = X.columns
-    sorted_idx = importances.argsort()[::-1]
-    print("Top 10 Random Forest Feature Importances:")
-    for i in range(min(10, len(feature_names))):
-        print(f"{feature_names[sorted_idx[i]]}: {importances[sorted_idx[i]]:.4f}")
-    
-    # Print full feature importance list
-    print("\nFull Random Forest Feature Importances:")
-    for i in range(len(feature_names)):
-        print(f"{i+1:2d}. {feature_names[sorted_idx[i]]}: {importances[sorted_idx[i]]:.4f}")
+
+    # # Print feature importances
+    # importances = model_rf.feature_importances_
+    # feature_names = X.columns
+    # sorted_idx = importances.argsort()[::-1]
+    # print("Top 10 Random Forest Feature Importances:")
+    # for i in range(min(10, len(feature_names))):
+    #     print(f"{feature_names[sorted_idx[i]]}: {importances[sorted_idx[i]]:.4f}")
+    #
+    # # Print full feature importance list
+    # print("\nFull Random Forest Feature Importances:")
+    # for i in range(len(feature_names)):
+    #     print(f"{i+1:2d}. {feature_names[sorted_idx[i]]}: {importances[sorted_idx[i]]:.4f}")
 
 
 def run_gb(X, y):
@@ -76,15 +76,16 @@ def run_gb(X, y):
     plt.title("Top 15 Feature Importances (Gradient Boosting)")
     plt.tight_layout()
     plt.show()
-    # Print top 10 features
-    print("Top 10 Gradient Boosting Feature Importances:")
-    for i in range(min(10, len(X.columns))):
-        print(f"{X.columns[sorted_idx[i]]}: {feature_importance[sorted_idx[i]]:.4f}")
-    
-    # Print full feature importance list
-    print("\nFull Gradient Boosting Feature Importances:")
-    for i in range(len(X.columns)):
-        print(f"{i+1:2d}. {X.columns[sorted_idx[i]]}: {feature_importance[sorted_idx[i]]:.4f}")
+
+    # # Print top 10 features
+    # print("Top 10 Gradient Boosting Feature Importances:")
+    # for i in range(min(10, len(X.columns))):
+    #     print(f"{X.columns[sorted_idx[i]]}: {feature_importance[sorted_idx[i]]:.4f}")
+    #
+    # # Print full feature importance list
+    # print("\nFull Gradient Boosting Feature Importances:")
+    # for i in range(len(X.columns)):
+    #     print(f"{i+1:2d}. {X.columns[sorted_idx[i]]}: {feature_importance[sorted_idx[i]]:.4f}")
 
 
 def run_linreg(X, y):
@@ -103,18 +104,19 @@ def run_linreg(X, y):
     print(f"MAE: {mae:.2f}")
     print(f"RMSE: {rmse:.2f}")
     print(f"R² Score: {r2:.3f}")
-    # Print top 10 coefficients
-    coefs = lr.coef_
-    feature_names = X.columns
-    sorted_idx = np.abs(coefs).argsort()[::-1]
-    print("Top 10 Linear Regression Coefficients:")
-    for i in range(min(10, len(feature_names))):
-        print(f"{feature_names[sorted_idx[i]]}: {coefs[sorted_idx[i]]:.4f}")
-    
-    # Print full coefficient list
-    print("\nFull Linear Regression Coefficients:")
-    for i in range(len(feature_names)):
-        print(f"{i+1:2d}. {feature_names[sorted_idx[i]]}: {coefs[sorted_idx[i]]:.4f}")
+
+    # # Print top 10 coefficients
+    # coefs = lr.coef_
+    # feature_names = X.columns
+    # sorted_idx = np.abs(coefs).argsort()[::-1]
+    # print("Top 10 Linear Regression Coefficients:")
+    # for i in range(min(10, len(feature_names))):
+    #     print(f"{feature_names[sorted_idx[i]]}: {coefs[sorted_idx[i]]:.4f}")
+    #
+    # # Print full coefficient list
+    # print("\nFull Linear Regression Coefficients:")
+    # for i in range(len(feature_names)):
+    #     print(f"{i+1:2d}. {feature_names[sorted_idx[i]]}: {coefs[sorted_idx[i]]:.4f}")
 
 
 def hyperp_tune(X, y):
